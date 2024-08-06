@@ -1,7 +1,9 @@
 'use client';
 import React, { useState } from "react";
 import Link from "next/link";
-import { Register, checkusername } from "@/lib/utils";
+import { Register, checkusername, customredirect } from "@/lib/utils";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function page() {
   const [userdata, setUserdata] = useState({
@@ -11,7 +13,7 @@ export default function page() {
 
     return (
 <div class="h-screen flex items-center justify-center">
-
+<ToastContainer/>
 <div class="bg-white py-5 px-8 border-t-4 border-blue-700 rounded-md shadow-lg">
   
   <h2 class="text-3xl text-gray-400 mb-3">Sign Up</h2>
@@ -43,14 +45,17 @@ export default function page() {
   <button 
           class="border-none bg-blue-800 py-2 px-3 text-white roudend-sm w-full mt-2 rounded-md hover:bg-blue-700 mb-5" 
           type="submit"
-          onClick={()=> Register(userdata)}
+          onClick={()=> Register(userdata).then(resp => {
+            if(resp.ok) {
+              toast.success('Account created successfully');
+              customredirect('/login');
+            }
+          })}
           >
     Create Account
   </button>
   
   <Link href="/login" class="text-sm text-blue-400">Login?</Link>
-  
-  
 </div>
 
 </div>

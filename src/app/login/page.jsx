@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Cookies from 'universal-cookie';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { customredirect } from '@/lib/utils';
 export default function page() {
   const cookies = new Cookies()
    const Login = async (usrdata) => {
-    let resp = await fetch('http://localhost:8787/api/login',{
+    let resp = await fetch(`http://localhost:8787/api/login`,{
       credentials:'include',
       method:'POST',
       headers: {
@@ -16,10 +18,12 @@ export default function page() {
       body: JSON.stringify(usrdata),
     })
     resp = await resp.json();
-    // cookies.set('token',resp.token,{
-    //   path:'/',
-    //   maxAge: 36000,
-    // })
+    console.log(resp)
+    if(resp.ok) {
+      toast("Logged in!");
+      customredirect('/todos')
+    }
+    return resp;
   }
   const [userdata, setUserdata] = useState({
     username: "",
@@ -27,7 +31,7 @@ export default function page() {
   });
   return (
 <div class="h-screen flex items-center justify-center bg-green-300">
-
+<ToastContainer/>
 <div class="bg-white py-5 px-8 border-t-4 border-blue-700 rounded-md shadow-lg">
   
   <h2 class="text-3xl text-gray-400 mb-3">Login</h2>

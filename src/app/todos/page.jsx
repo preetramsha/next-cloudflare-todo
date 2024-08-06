@@ -4,8 +4,28 @@
  import { Input } from "@/components/ui/input"
  import { Button } from "@/components/ui/button"
  import { Card } from "@/components/ui/card"
- 
+ import { useEffect } from "react"
+ import { validateToken } from "@/lib/auth"
+ import { customredirect } from "@/lib/utils"
+ import { logout } from "@/lib/auth"
+import { toast } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
+
  export default function page() {
+  const [name, setName] = useState('')
+  useEffect(() => {
+    validateToken().then(
+      (res) => {
+        console.log(res);
+        if(!res?.ok) { 
+          customredirect('/login');
+        }else{
+          setName(res?.data.username);
+        }
+      }
+    )
+  }, [])
+  
    const [todos, setTodos] = useState([
      {
        id: 1,
@@ -60,6 +80,7 @@
    }
    return (
      <div className="bg-background text-foreground min-h-screen flex flex-col items-center justify-center p-4">
+        <div className="relative bottom-10 md:bottom-20">Hello, {name}</div>
        <div className="max-w-md w-full">
          <h1 className="text-3xl font-bold mb-4 sm:mb-2">Todo List</h1>
          <div className="mb-4 sm:mb-2 grid gap-2">
@@ -106,6 +127,16 @@
            ))}
          </div>
        </div>
+       <div className="hover:cursor" onClick={()=> {
+        logout().then(r => {
+          if(r.ok){
+            toast.success('Logout Success');
+            customredirect('/login');
+          } else{
+            toast.error('Logout Failed');
+          }
+        })
+       }}>logout</div>
      </div>
    )
  }
