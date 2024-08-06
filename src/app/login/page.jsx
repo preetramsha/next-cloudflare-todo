@@ -4,7 +4,8 @@ import Link from 'next/link';
 import Cookies from 'universal-cookie';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { customredirect } from '@/lib/utils';
+import { customredirect } from '@/lib/serverfn';
+
 export default function page() {
   const cookies = new Cookies()
    const Login = async (usrdata) => {

@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from "react";
 import Link from "next/link";
-import { Register, checkusername, customredirect } from "@/lib/utils";
+import { Register, checkusername, customredirect } from "@/lib/serverfn";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

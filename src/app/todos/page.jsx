@@ -1,26 +1,29 @@
  "use client"
-
+ 
  import { useState } from "react"
  import { Input } from "@/components/ui/input"
  import { Button } from "@/components/ui/button"
  import { Card } from "@/components/ui/card"
  import { useEffect } from "react"
  import { validateToken } from "@/lib/auth"
- import { customredirect } from "@/lib/utils"
+ import { customredirect } from "@/lib/serverfn"
  import { logout } from "@/lib/auth"
 import { toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
+import Image from "next/image"
 
  export default function page() {
+  const [isLoading, setIsLoading] = useState(true)
   const [name, setName] = useState('')
   useEffect(() => {
     validateToken().then(
       (res) => {
         console.log(res);
         if(!res?.ok) { 
-          customredirect('/login');
+          //customredirect('/login');
         }else{
           setName(res?.data.username);
+          setIsLoading(true);
         }
       }
     )
@@ -78,6 +81,18 @@ import 'react-toastify/dist/ReactToastify.css';
    const handleDeleteTodo = (id) => {
      setTodos(todos.filter((todo) => todo.id !== id))
    }
+   if (isLoading) {
+    return <div className="flex h-screen justify-center items-center">
+      <Image
+        src="/loading.gif"
+        alt="Loading..."
+        className="dark:invert"
+        width={50}
+        height={24}
+        priority
+      />
+  </div>; // Or any loading indicator
+  }
    return (
      <div className="bg-background text-foreground min-h-screen flex flex-col items-center justify-center p-4">
         <div className="relative bottom-10 md:bottom-20">Hello, {name}</div>
