@@ -6,81 +6,62 @@
  import { Card } from "@/components/ui/card"
  import { useEffect } from "react"
  import { validateToken } from "@/lib/auth"
- import { customredirect } from "@/lib/serverfn"
+ import { customredirect, deletetodo, gettodo, patchtodo, posttodo } from "@/lib/serverfn"
  import { logout } from "@/lib/auth"
 import { ToastContainer,toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import Image from "next/image"
 
  export default function page() {
-  const [isLoading, setIsLoading] = useState(true)
-  const [name, setName] = useState('')
+  const [isLoading, setIsLoading] = useState(true);
+  const [todos, setTodos] = useState([]);
+  const [newTodo, setNewTodo] = useState({
+    title: "",
+  });
+  const [editingTodo, setEditingTodo] = useState(null);
+  const [token, setToken] = useState('')
+  const [name, setName] = useState('');
+  
   useEffect(() => {
     validateToken().then(
       (res) => {
-        console.log('ress',res);
         if(!res?.ok) { 
           customredirect('/login');
         }else{
           setName(res?.data.username);
-          setIsLoading(false);
+          setToken(res.token)
+          gettodo(res?.data.username,res?.token).then((resp)=>{
+            setTodos(resp.data);
+            console.log('todos=',resp.data);
+            setIsLoading(false);
+          })
         }
       }
     )
   }, [])
-  
-   const [todos, setTodos] = useState([
-     {
-       id: 1,
-       title: "Finish project proposal",
-       completed: false,
-     },
-     {
-       id: 2,
-       title: "Grocery shopping",
-       completed: false,
-     },
-     {
-       id: 3,
-       title: "Clean the house",
-       completed: true,
-     },
-   ])
-   const [newTodo, setNewTodo] = useState({
-     title: "",
-   })
-   const [editingTodo, setEditingTodo] = useState(null)
-   const handleAddTodo = () => {
-     if (newTodo.title.trim() !== "") {
-       setTodos([
-         ...todos,
-         {
-           id: todos.length + 1,
-           title: newTodo.title,
-           completed: false,
-         },
-       ])
-       setNewTodo({ title: "" })
-     }
-   }
-   const handleToggleComplete = (id) => {
-     setTodos(todos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)))
-   }
-   const handleEditTodo = (id) => {
-     const todo = todos.find((t) => t.id === id)
-     setEditingTodo(todo)
-     setNewTodo({ title: todo.title })
-   }
-   const handleUpdateTodo = () => {
-     if (newTodo.title.trim() !== "") {
-       setTodos(todos.map((todo) => (todo.id === editingTodo.id ? { ...todo, title: newTodo.title } : todo)))
-       setEditingTodo(null)
-       setNewTodo({ title: "" })
-     }
-   }
-   const handleDeleteTodo = (id) => {
-     setTodos(todos.filter((todo) => todo.id !== id))
-   }
+  const handleAddTodo = async () => {
+    const resp = await posttodo(name.trim(),newTodo.title,token);
+    if(resp.ok){
+      console.log('fromtodo',resp);
+      toast.success('New todo added');
+      setTodos(prevData => [...prevData,resp.data[0]])
+    }
+  }
+  const handleUpdate = async () =>{
+    if(editingTodo){
+      if (newTodo.title.trim() !== "") {
+        const resp = await patchtodo(name,newTodo.title,editingTodo.id);
+        if(resp.ok){
+          if (newTodo.title.trim() !== "") {
+          setTodos(todos.map((todo) => todo.id === editingTodo.id ? { ...todo, desc: newTodo.title } : todo ));
+          setEditingTodo(null)
+          setNewTodo({ title: "" })
+          toast.success('Todo updated');
+          } 
+        }
+      }
+  }}
+
    if (isLoading) {
     return <div className="flex h-screen justify-center items-center">
       <Image
@@ -108,33 +89,52 @@ import Image from "next/image"
            />
            <div>
              {editingTodo ? (
-               <Button onClick={handleUpdateTodo} className="w-full">
+              // put onclick here
+               <Button 
+               onClick={handleUpdate}
+               className="w-full"> 
                  Update Todo
                </Button>
              ) : (
-               <Button onClick={handleAddTodo} className="w-full">
+              //put onclick here
+               <Button
+               onClick={handleAddTodo}
+               className="w-full">
                  Add Todo
                </Button>
              )}
            </div>
          </div>
          <div className="space-y-4">
-           {todos.map((todo) => (
+           {todos.length>0 && todos.map((todo) => (
              <Card key={todo.id} className="p-4">
                <div className="flex flex-col sm:flex-row justify-between items-center mb-2">
-                 <h3 className="text-lg font-medium">{todo.title}</h3>
+                 <h3 className="text-lg font-medium">{todo.desc}</h3>
                  <div className="flex gap-2 mt-2 sm:mt-0">
                    <Button
                      size="sm"
-                     onClick={() => handleToggleComplete(todo.id)}
+                     
                      className={`${todo.completed ? "bg-green-500 text-green-50" : "bg-gray-500 text-white"}`}
                    >
                      {todo.completed ? "Completed" : "Incomplete"}
                    </Button>
-                   <Button size="sm" onClick={() => handleEditTodo(todo.id)} className="bg-blue-500 text-blue-50">
+                   <Button size="sm" 
+                   //put onclick here
+                   onClick={() => {
+                    setNewTodo({title:todo.desc});
+                    setEditingTodo(todo);
+                  }}
+                     className="bg-blue-500 text-blue-50">
                      Edit
                    </Button>
-                   <Button size="sm" onClick={() => handleDeleteTodo(todo.id)} className="bg-red-500 text-red-50">
+                   <Button size="sm"
+                   onClick={() => {
+                    deletetodo(name,todo.id,token).then(()=>{
+                      setTodos(prevData => prevData.filter(item => item.id  !== todo.id ));
+                      toast.success('Deleted!');
+                    })
+                  }}
+                   className="bg-red-500 text-red-50">
                      Delete
                    </Button>
                  </div>
