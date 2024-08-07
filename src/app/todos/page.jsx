@@ -18,7 +18,7 @@ import Image from "next/image"
   useEffect(() => {
     validateToken().then(
       (res) => {
-        console.log(res);
+        console.log('ress',res);
         if(!res?.ok) { 
           customredirect('/login');
         }else{

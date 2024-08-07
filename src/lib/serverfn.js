@@ -29,3 +29,57 @@ export const checkusername = async (username) => {
   resp = await resp.json();
   return JSON.stringify(resp)
 }
+
+export const posttodo = async(username,desc,token) => {
+  let resp = await fetch(`http://localhost:8787}/api/todo`,{
+    method:'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({username,desc}),
+  })
+  resp = await resp.json();
+  return JSON.stringify(resp)
+}
+
+export const deletetodo = async(username,tid,token) => {
+  let resp = await fetch(`http://localhost:8787}/api/todo`,{
+    method:'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({username,tid}),
+  })
+  resp = await resp.json();
+  return JSON.stringify(resp)
+}
+export const patchtodo = async(username,desc,tid,token) => {
+  let resp = await fetch(`http://localhost:8787}/api/todo`,{
+    method:'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({username,desc,tid}),
+  })
+  resp = await resp.json();
+  return JSON.stringify(resp)
+}
+
+export const gettodo = async(username,token) => {
+  let resp = await fetch(`http://localhost:8787}/api/todo?username=${username}`,{
+    method:'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  })
+  resp = await resp.json();
+  return JSON.stringify(resp)
+}
