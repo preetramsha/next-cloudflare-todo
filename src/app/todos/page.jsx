@@ -8,7 +8,7 @@
  import { validateToken } from "@/lib/auth"
  import { customredirect } from "@/lib/serverfn"
  import { logout } from "@/lib/auth"
-import { toast } from "react-toastify"
+import { ToastContainer,toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import Image from "next/image"
 
@@ -20,10 +20,10 @@ import Image from "next/image"
       (res) => {
         console.log(res);
         if(!res?.ok) { 
-          //customredirect('/login');
+          customredirect('/login');
         }else{
           setName(res?.data.username);
-          setIsLoading(true);
+          setIsLoading(false);
         }
       }
     )
@@ -96,6 +96,7 @@ import Image from "next/image"
    return (
      <div className="bg-background text-foreground min-h-screen flex flex-col items-center justify-center p-4">
         <div className="relative bottom-10 md:bottom-20">Hello, {name}</div>
+        <ToastContainer/>
        <div className="max-w-md w-full">
          <h1 className="text-3xl font-bold mb-4 sm:mb-2">Todo List</h1>
          <div className="mb-4 sm:mb-2 grid gap-2">
@@ -146,7 +147,9 @@ import Image from "next/image"
         logout().then(r => {
           if(r.ok){
             toast.success('Logout Success');
-            customredirect('/login');
+            setTimeout(() => {
+              customredirect('/login');
+            }, 700);
           } else{
             toast.error('Logout Failed');
           }

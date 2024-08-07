@@ -1,13 +1,28 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Link from 'next/link';
-import Cookies from 'universal-cookie';
-import { ToastContainer, toast } from 'react-toastify';
+import {ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { customredirect } from '@/lib/serverfn';
-
+import { validateToken } from '@/lib/auth';
+import Image from 'next/image';
 export default function page() {
-  const cookies = new Cookies()
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    validateToken().then(
+      (res) => {
+        console.log('q res',res);
+        if(res.ok){
+          toast.warn("Already logged in")
+          customredirect('/todos');
+        }
+        else{
+          setLoading(false);
+        }
+      }
+    )
+  }, [])
+  
    const Login = async (usrdata) => {
     let resp = await fetch(`http://localhost:8787/api/login`,{
       credentials:'include',
@@ -21,8 +36,10 @@ export default function page() {
     resp = await resp.json();
     console.log(resp)
     if(resp.ok) {
-      toast("Logged in!");
-      customredirect('/todos')
+      toast.success("Logged in!");
+      setTimeout(() => {
+        customredirect('/todos')
+      }, 700);
     }
     return resp;
   }
@@ -30,6 +47,20 @@ export default function page() {
     username: "",
     password: "",
   });
+  if (loading) {
+    return(
+      <div className="flex h-screen justify-center items-center">
+      <Image
+        src="/loading.gif"
+        alt="Loading..."
+        className="dark:invert"
+        width={50}
+        height={24}
+        priority
+      />
+  </div>
+    )
+  }else{
   return (
 <div class="h-screen flex items-center justify-center bg-green-300">
 <ToastContainer/>
@@ -62,7 +93,7 @@ export default function page() {
 </div>
 
 </div>
-  );
+  )}
 }
 
 
