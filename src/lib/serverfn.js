@@ -84,3 +84,18 @@ export const gettodo = async(username,token) => {
   resp = await resp.json();
   return resp
 }
+
+export const toggletodo = async(username,tid,token) => {
+  let resp = await fetch(`http://localhost:8787/api/todo/status`,{
+    method:'PATCH',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({username,tid}),
+  });
+  console.log('from toggle'+resp)
+  resp = await resp.json();
+  return resp
+}

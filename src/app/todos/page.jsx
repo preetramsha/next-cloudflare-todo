@@ -6,7 +6,7 @@
  import { Card } from "@/components/ui/card"
  import { useEffect } from "react"
  import { validateToken } from "@/lib/auth"
- import { customredirect, deletetodo, gettodo, patchtodo, posttodo } from "@/lib/serverfn"
+ import { customredirect, deletetodo, gettodo, patchtodo, posttodo, toggletodo } from "@/lib/serverfn"
  import { logout } from "@/lib/auth"
 import { ToastContainer,toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
@@ -40,17 +40,23 @@ import Image from "next/image"
     )
   }, [])
   const handleAddTodo = async () => {
-    const resp = await posttodo(name.trim(),newTodo.title,token);
-    if(resp.ok){
-      console.log('fromtodo',resp);
-      toast.success('New todo added');
-      setTodos(prevData => [...prevData,resp.data[0]])
+    if(newTodo.title == ''){
+      toast.warn('Title is empty');
+      return;
+    }
+    else{ 
+      const resp = await posttodo(name.trim(),newTodo.title,token);
+      if(resp.ok){
+        console.log('fromtodo',resp);
+        toast.success('New todo added');
+        setTodos(prevData => [...prevData,resp.data[0]])
+      }
     }
   }
   const handleUpdate = async () =>{
     if(editingTodo){
       if (newTodo.title.trim() !== "") {
-        const resp = await patchtodo(name,newTodo.title,editingTodo.id);
+        const resp = await patchtodo(name,newTodo.title,editingTodo.id,token);
         if(resp.ok){
           if (newTodo.title.trim() !== "") {
           setTodos(todos.map((todo) => todo.id === editingTodo.id ? { ...todo, desc: newTodo.title } : todo ));
@@ -61,6 +67,14 @@ import Image from "next/image"
         }
       }
   }}
+
+  const toggle = async (tid) =>{
+    const resp = await toggletodo(name,tid,token);
+    if(resp.ok){
+      setTodos(todos.map((todo) => todo.id === tid ? { ...todo, completed: !todo.completed } : todo ));
+      toast.success('Todo updated');
+    }
+  }
 
    if (isLoading) {
     return <div className="flex h-screen justify-center items-center">
@@ -113,7 +127,7 @@ import Image from "next/image"
                  <div className="flex gap-2 mt-2 sm:mt-0">
                    <Button
                      size="sm"
-                     
+                     onClick={()=> toggle(todo.id)}
                      className={`${todo.completed ? "bg-green-500 text-green-50" : "bg-gray-500 text-white"}`}
                    >
                      {todo.completed ? "Completed" : "Incomplete"}
