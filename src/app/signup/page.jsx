@@ -12,7 +12,7 @@ export default function page() {
     password: "",
   });
   const [valid, setValid] = useState(null);
-  let pattern = /[A-Za-z0-9]/;
+  const pattern = /[A-Za-z0-9]/;
   const passwordpattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
 
   useEffect(() => {
@@ -65,6 +65,10 @@ export default function page() {
           class="border-none bg-blue-800 py-2 px-3 text-white roudend-sm w-full mt-2 rounded-md hover:bg-blue-700 mb-5" 
           type="submit"
           onClick={()=> {
+            if(!valid){
+              toast.warn("username taken!");
+              return;
+            }
             if(!pattern.test(userdata.username) || !pattern.test(userdata.password )){
               toast.warn("username or password is empty!")
               return;
