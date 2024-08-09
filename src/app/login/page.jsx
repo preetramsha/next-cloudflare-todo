@@ -41,6 +41,9 @@ export default function page() {
         customredirect('/todos')
       }, 700);
     }
+    else{
+      toast.error("Invalid credentials");
+    }
     return resp;
   }
   const [userdata, setUserdata] = useState({

@@ -47,6 +47,7 @@ import Image from "next/image"
     else{ 
       const resp = await posttodo(name.trim(),newTodo.title,token);
       if(resp.ok){
+        setNewTodo({title:''});
         console.log('fromtodo',resp);
         toast.success('New todo added');
         setTodos(prevData => [...prevData,resp.data[0]])
