@@ -1,7 +1,7 @@
 'use client';
 
 export const validateToken = async () => {
-    let resp = await fetch(`http://localhost:8787/api/validatetoken`,{
+    let resp = await fetch(`https://todo-cf.preetramsha.workers.dev/api/validatetoken`,{
       cache:'default',
       method:'GET',
       credentials:'include',
@@ -15,7 +15,7 @@ export const validateToken = async () => {
 }
 
 export const logout = async () => {
-  let resp = await fetch(`http://localhost:8787/api/logout`,{
+  let resp = await fetch(`https://todo-cf.preetramsha.workers.dev/api/logout`,{
     cache:'default',
     method:'POST',
     credentials:'include',

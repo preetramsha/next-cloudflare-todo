@@ -1,6 +1,11 @@
 'use client';
 export const runtime = 'edge';
+import * as React from "react";
+import { useEffect } from "react";
 
-export default function page() {
-  window.location.replace('/login')
+export default function Page() {
+  useEffect(() => {
+    window.location.replace('/login')
+  }, [])
+  
 }

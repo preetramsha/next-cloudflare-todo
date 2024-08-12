@@ -8,7 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { debounce } from 'lodash';
 
-export default function page() {
+export default function Page() {
   const [userdata, setUserdata] = useState({
     username: "",
     password: "",

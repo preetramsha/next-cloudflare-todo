@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { customredirect } from '@/lib/serverfn';
 import { validateToken } from '@/lib/auth';
 import Image from 'next/image';
-export default function page() {
+export default function Page() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     validateToken().then(
@@ -26,7 +26,7 @@ export default function page() {
   }, [])
   
    const Login = async (usrdata) => {
-    let resp = await fetch(`http://localhost:8787/api/login`,{
+    let resp = await fetch(`https://todo-cf.preetramsha.workers.dev/api/login`,{
       credentials:'include',
       method:'POST',
       headers: {

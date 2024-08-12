@@ -2,9 +2,9 @@
  export const runtime = 'edge';
 
  import { useState } from "react"
- import { Input } from "@/components/ui/input"
- import { Button } from "@/components/ui/button"
- import { Card } from "@/components/ui/card"
+ import { Input } from "@/components/ui/Input"
+ import { Button } from "@/components/ui/Button"
+ import { Card } from "@/components/ui/Card"
  import { useEffect } from "react"
  import { validateToken } from "@/lib/auth"
  import { customredirect, deletetodo, gettodo, patchtodo, posttodo, toggletodo } from "@/lib/serverfn"
@@ -13,7 +13,7 @@ import { ToastContainer,toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import Image from "next/image"
 
- export default function page() {
+ export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState({

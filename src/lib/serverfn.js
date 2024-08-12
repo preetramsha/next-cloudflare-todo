@@ -3,7 +3,7 @@
 import { redirect } from 'next/navigation';
 
 export const Register = async (usrdata) => {
-  let resp = await fetch(`http://localhost:8787/api/user`,{
+  let resp = await fetch(`https://todo-cf.preetramsha.workers.dev/api/user`,{
     method:'POST',
     headers: {
       'Accept': 'application/json',
@@ -19,7 +19,7 @@ export const customredirect = async (url)=>{
 }
 
 export const checkusername = async (username) => {
-  let resp = await fetch(`http://localhost:8787/api/isusernameavailable?username=${username}`,{
+  let resp = await fetch(`https://todo-cf.preetramsha.workers.dev/api/isusernameavailable?username=${username}`,{
     method:'GET',
     headers: {
       'Accept': 'application/json',
@@ -31,7 +31,7 @@ export const checkusername = async (username) => {
 }
 
 export const posttodo = async(username,desc,token) => {
-  let resp = await fetch(`http://localhost:8787/api/todo`,{
+  let resp = await fetch(`https://todo-cf.preetramsha.workers.dev/api/todo`,{
     method:'POST',
     headers: {
       'Accept': 'application/json',
@@ -45,7 +45,7 @@ export const posttodo = async(username,desc,token) => {
 }
 
 export const deletetodo = async(username,tid,token) => {
-  let resp = await fetch(`http://localhost:8787/api/todo`,{
+  let resp = await fetch(`https://todo-cf.preetramsha.workers.dev/api/todo`,{
     method:'DELETE',
     headers: {
       'Accept': 'application/json',
@@ -58,7 +58,7 @@ export const deletetodo = async(username,tid,token) => {
   return resp
 }
 export const patchtodo = async(username,desc,tid,token) => {
-  let resp = await fetch(`http://localhost:8787/api/todo`,{
+  let resp = await fetch(`https://todo-cf.preetramsha.workers.dev/api/todo`,{
     method:'PATCH',
     headers: {
       'Accept': 'application/json',
@@ -72,7 +72,7 @@ export const patchtodo = async(username,desc,tid,token) => {
 }
 
 export const gettodo = async(username,token) => {
-  let resp = await fetch(`http://localhost:8787/api/todo?username=${username}`,{
+  let resp = await fetch(`https://todo-cf.preetramsha.workers.dev/api/todo?username=${username}`,{
     method:'GET',
     headers: {
       'Accept': 'application/json',
@@ -86,7 +86,7 @@ export const gettodo = async(username,token) => {
 }
 
 export const toggletodo = async(username,tid,token) => {
-  let resp = await fetch(`http://localhost:8787/api/todo/status`,{
+  let resp = await fetch(`https://todo-cf.preetramsha.workers.dev/api/todo/status`,{
     method:'PATCH',
     headers: {
       'Accept': 'application/json',
