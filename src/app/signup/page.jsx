@@ -1,4 +1,6 @@
 'use client';
+export const runtime = 'edge';
+
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Register, checkusername, customredirect } from "@/lib/serverfn";
@@ -14,6 +16,41 @@ export default function page() {
   const [valid, setValid] = useState(null);
   const pattern = /[A-Za-z0-9]/;
   const passwordpattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
+
+  const _register = ()=> {
+    if(!valid){
+      toast.warn("username taken!");
+      return;
+    }
+    if(!pattern.test(userdata.username) || !pattern.test(userdata.password )){
+      toast.warn("username or password is empty!")
+      return;
+    }
+    if (userdata.password.length < 8) {
+      toast.warn("Password must be at least 8 characters long!");
+      return;
+    }
+    if (!passwordpattern.test(userdata.password)) {
+      toast.warn(
+        <div>
+          Password must contain at least:
+          <ul>
+            <li>⦿ one uppercase letter</li>
+            <li>⦿ one lowercase letter</li>
+            <li>⦿ one number</li>
+            <li>⦿ one special character</li>
+          </ul>
+        </div>
+      );
+      return;
+    }
+    Register(userdata).then(resp => {
+      if(resp.ok) {
+        toast.success('Account created successfully');
+        customredirect('/login');
+      }
+    })
+  }
 
   useEffect(() => {
     const debouncedCheckUsername = debounce((username) => {
@@ -64,40 +101,7 @@ export default function page() {
   <button 
           class="border-none bg-blue-800 py-2 px-3 text-white roudend-sm w-full mt-2 rounded-md hover:bg-blue-700 mb-5" 
           type="submit"
-          onClick={()=> {
-            if(!valid){
-              toast.warn("username taken!");
-              return;
-            }
-            if(!pattern.test(userdata.username) || !pattern.test(userdata.password )){
-              toast.warn("username or password is empty!")
-              return;
-            }
-            if (userdata.password.length < 8) {
-              toast.warn("Password must be at least 8 characters long!");
-              return;
-            }
-            if (!passwordpattern.test(userdata.password)) {
-              toast.warn(
-                <div>
-                  Password must contain at least:
-                  <ul>
-                    <li>⦿ one uppercase letter</li>
-                    <li>⦿ one lowercase letter</li>
-                    <li>⦿ one number</li>
-                    <li>⦿ one special character</li>
-                  </ul>
-                </div>
-              );
-              return;
-            }
-            Register(userdata).then(resp => {
-              if(resp.ok) {
-                toast.success('Account created successfully');
-                customredirect('/login');
-              }
-            })
-          }}
+          onClick={_register}
           >
     Create Account
   </button>

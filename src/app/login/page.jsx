@@ -1,4 +1,6 @@
 'use client';
+
+export const runtime = 'edge';
 import React, { useState,useEffect } from 'react';
 import Link from 'next/link';
 import {ToastContainer, toast } from 'react-toastify';
@@ -89,8 +91,6 @@ export default function page() {
     Sign In
   </button>
   
-  <a href="#" class="text-sm text-blue-400">Forgot Password?</a>
-  <br />
   <Link href="/signup" class="text-sm text-blue-400">Create New Account</Link>
   
 </div>
